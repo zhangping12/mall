@@ -8,4 +8,11 @@ import com.imooc.mall.model.pojo.User;
 public interface UserService {
 
     User getUser();
+
+    /**
+     * 注册
+     * @param userName
+     * @param password
+     */
+    void register(String userName,String password);
 }
