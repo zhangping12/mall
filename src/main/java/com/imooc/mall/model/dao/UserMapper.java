@@ -1,6 +1,7 @@
 package com.imooc.mall.model.dao;
 
 import com.imooc.mall.model.pojo.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,6 +15,8 @@ public interface UserMapper {
     User selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(User record);
+
+    User selectLogin(@Param("userName") String userName, @Param("password") String password);
 
     int updateByPrimaryKey(User record);
 
