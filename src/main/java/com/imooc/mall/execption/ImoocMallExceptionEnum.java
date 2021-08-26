@@ -6,7 +6,9 @@ package com.imooc.mall.execption;
 public enum ImoocMallExceptionEnum {
     NEED_USER_NAME(10001,"用户名不能为空"),
     NEED_PASSWORD(10002,"密码不能为空"),
-    PASSWORD_TOO_SHORT(10003,"密码长度不能小于8位");
+    PASSWORD_TOO_SHORT(10003,"密码长度不能小于8位"),
+    NAME_EXISTED(10004,"用户名存在，请重新注册"),
+    INSERT_FAILED(10005,"插入失败，请重试");
     //异常码
     Integer code;
     //异常信息
