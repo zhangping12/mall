@@ -20,16 +20,30 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public void add(AddCategoryReq addCategoryReq){
+    public void add(AddCategoryReq addCategoryReq) {
         Category category = new Category();
-        BeanUtils.copyProperties(addCategoryReq,category);//如果对象存在相同的字段，就可以通过BeanUtils.copyProperties(数据来源的对象，要复制到的对象）
+        BeanUtils.copyProperties(addCategoryReq, category);//如果对象存在相同的字段，就可以通过BeanUtils.copyProperties(数据来源的对象，要复制到的对象）
         Category categoryOld = categoryMapper.selectByName(addCategoryReq.getName());
-        if(categoryOld != null){
+        if (categoryOld != null) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NAME_EXISTED);
         }
         int count = categoryMapper.insertSelective(category);
-        if(count == 0){
+        if (count == 0) {
             throw new ImoocMallException(ImoocMallExceptionEnum.CREATE_FAILED);
+        }
+    }
+
+    @Override
+    public void update(Category updateCategory) {
+        if (updateCategory.getName() != null) {
+            Category categoryOld = categoryMapper.selectByName(updateCategory.getName());
+            if (categoryOld != null && !categoryOld.getId().equals(updateCategory.getId())) {
+                throw new ImoocMallException(ImoocMallExceptionEnum.NAME_EXISTED);
+            }
+        }
+        int count = categoryMapper.updateByPrimaryKeySelective(updateCategory);
+        if (count == 0) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
         }
     }
 }
