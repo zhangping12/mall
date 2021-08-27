@@ -7,6 +7,7 @@ import com.imooc.mall.model.pojo.User;
 import com.imooc.mall.model.request.AddCategoryReq;
 import com.imooc.mall.service.CategoryService;
 import com.imooc.mall.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,14 @@ public class CategoryController {
     @Resource
     private CategoryService categoryService;
 
+    /**
+     * 后台添加目录
+     *
+     * @param session
+     * @param addCategoryReq
+     * @return
+     */
+    @ApiOperation("后台添加目录")
     @PostMapping("/admin/category/add")
     @ResponseBody
     public ApiRestResponse addCategory(HttpSession session, @Valid @RequestBody AddCategoryReq addCategoryReq) {
