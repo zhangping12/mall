@@ -8,10 +8,13 @@ import com.imooc.mall.model.dao.CategoryMapper;
 import com.imooc.mall.model.pojo.Category;
 import com.imooc.mall.model.request.AddCategoryReq;
 import com.imooc.mall.service.CategoryService;
+import com.imooc.mall.vo.CategoryVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,5 +71,26 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categoryList = categoryMapper.selectList();
         PageInfo pageInfo = new PageInfo(categoryList);
         return pageInfo;
+    }
+
+    @Override
+    public List<CategoryVO> listCategoryForCustomer() {
+        ArrayList<CategoryVO> categoryVOList = new ArrayList<>();
+        recursivelyFindCategories(categoryVOList, 0);
+        return categoryVOList;
+    }
+
+    private void recursivelyFindCategories(List<CategoryVO> categoryVOList, Integer parentId) {
+        //递归获取所有子类别，并组合成为一个"目录树"
+        List<Category> categoryList = categoryMapper.selectCategoriesByParentId(parentId);
+        if (!CollectionUtils.isEmpty(categoryList)) {
+            for (int i = 0; i < categoryList.size(); i++) {
+                Category category = categoryList.get(i);
+                CategoryVO categoryVO = new CategoryVO();
+                BeanUtils.copyProperties(category, categoryVO);
+                categoryVOList.add(categoryVO);
+                recursivelyFindCategories(categoryVO.getChildCategory(), categoryVO.getId());//前面的符号就是代表递归
+            }
+        }
     }
 }
