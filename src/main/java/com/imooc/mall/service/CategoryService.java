@@ -8,4 +8,6 @@ public interface CategoryService {
 
 
     void update(Category updateCategory);
+
+    void delete(Integer id);
 }

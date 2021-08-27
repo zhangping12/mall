@@ -34,7 +34,7 @@ public class AdminFilter implements Filter {
             PrintWriter out = new HttpServletResponseWrapper((HttpServletResponse) response).getWriter();
             out.write("{\n" +
                     "    \"status\": 10007,\n" +
-                    "    \"msg\": \"用户未登录\",\n" +
+                    "    \"msg\": \"NEED_LOGIN\",\n" +
                     "    \"date\": null\n" +
                     "}");
             out.flush();
@@ -48,7 +48,7 @@ public class AdminFilter implements Filter {
             PrintWriter out = new HttpServletResponseWrapper((HttpServletResponse) response).getWriter();
             out.write("{\n" +
                     "    \"status\": 10009,\n" +
-                    "    \"msg\": \"无管理员权限\",\n" +
+                    "    \"msg\": \"NEED_ADMIN\",\n" +
                     "    \"date\": null\n" +
                     "}");
             out.flush();

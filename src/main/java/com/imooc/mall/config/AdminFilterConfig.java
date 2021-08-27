@@ -15,6 +15,7 @@ public class AdminFilterConfig {
         return new AdminFilter();
     }
 
+    @Bean(name = "adminFilterConf")
     public FilterRegistrationBean adminFilterConfig() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(adminFilter());
