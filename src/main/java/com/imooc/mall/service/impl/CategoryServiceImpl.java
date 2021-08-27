@@ -1,5 +1,7 @@
 package com.imooc.mall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.imooc.mall.execption.ImoocMallException;
 import com.imooc.mall.execption.ImoocMallExceptionEnum;
 import com.imooc.mall.model.dao.CategoryMapper;
@@ -10,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 描述：目录分类Service实现类
@@ -57,5 +60,13 @@ public class CategoryServiceImpl implements CategoryService {
         if (count == 0) {
             throw new ImoocMallException(ImoocMallExceptionEnum.DELETE_FAILED);
         }
+    }
+
+    @Override
+    public PageInfo listForAdmin(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize, "type,order_num");
+        List<Category> categoryList = categoryMapper.selectList();
+        PageInfo pageInfo = new PageInfo(categoryList);
+        return pageInfo;
     }
 }
