@@ -1,5 +1,7 @@
 package com.imooc.mall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.imooc.mall.execption.ImoocMallException;
 import com.imooc.mall.execption.ImoocMallExceptionEnum;
 import com.imooc.mall.model.dao.ProductMapper;
@@ -10,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 描述：商品服务实现类
@@ -61,5 +64,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void batchUpdateSellStatus(Integer[] ids, Integer sellStatus) {
         productMapper.batchUpdateSellStatus(ids, sellStatus);
+    }
+
+    @Override
+    public PageInfo listForAdmin(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Product> products = productMapper.selectListForAdmin();
+        PageInfo pageInfo = new PageInfo(products);
+        return pageInfo;
+    }
+
+    @Override
+    public Product detail(Integer id) {
+        Product product = productMapper.selectByPrimaryKey(id);
+        return product;
     }
 }
