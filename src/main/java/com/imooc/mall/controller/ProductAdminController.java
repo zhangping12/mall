@@ -30,13 +30,13 @@ public class ProductAdminController {
     @Resource
     private ProductService productService;
 
-    @PostMapping("admin/product/add")
+    @PostMapping("/admin/product/add")
     public ApiRestResponse addProduct(@Valid @RequestBody AddProductReq addProductReq) {
         productService.add(addProductReq);
         return ApiRestResponse.success();
     }
 
-    @PostMapping("admin/upload/file")
+    @PostMapping("/admin/upload/file")
     public ApiRestResponse upload(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) {
         String filename = file.getOriginalFilename();
         String suffixName = filename.substring(filename.lastIndexOf("."));
