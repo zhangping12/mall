@@ -1,4 +1,4 @@
-package com.imooc.mall.vo;
+package com.imooc.mall.model.vo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

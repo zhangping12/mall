@@ -1,4 +1,4 @@
-package com.imooc.mall.vo;
+package com.imooc.mall.model.vo;
 
 /**
  * 描述：CartVO，给前端展示用

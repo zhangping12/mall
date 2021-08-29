@@ -10,7 +10,7 @@ import com.imooc.mall.model.request.AddCategoryReq;
 import com.imooc.mall.model.request.UpdateCategoryReq;
 import com.imooc.mall.service.CategoryService;
 import com.imooc.mall.service.UserService;
-import com.imooc.mall.vo.CategoryVO;
+import com.imooc.mall.model.vo.CategoryVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;

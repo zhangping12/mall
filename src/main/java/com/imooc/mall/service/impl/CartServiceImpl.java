@@ -7,8 +7,8 @@ import com.imooc.mall.model.dao.CartMapper;
 import com.imooc.mall.model.dao.ProductMapper;
 import com.imooc.mall.model.pojo.Cart;
 import com.imooc.mall.model.pojo.Product;
+import com.imooc.mall.model.vo.CartVO;
 import com.imooc.mall.service.CartService;
-import com.imooc.mall.vo.CartVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,7 +49,7 @@ public class CartServiceImpl implements CartService {
             cartNew.setSelected(Constant.Cart.CHECKED);
             cartMapper.updateByPrimaryKeySelective(cartNew);
         }
-        return null;
+        return this.list(userId);
     }
 
     private void validProduct(Integer productId, Integer count) {
@@ -62,5 +62,15 @@ public class CartServiceImpl implements CartService {
         if (count > product.getStock()) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NOT_ENOUGH);
         }
+    }
+
+    @Override
+    public List<CartVO> list(Integer userId) {
+        List<CartVO> cartVOS = cartMapper.selectList(userId);
+        for (int i = 0; i < cartVOS.size(); i++) {
+            CartVO cartVO = cartVOS.get(i);
+            cartVO.setTotalPrice(cartVO.getPrice() * cartVO.getQuantity());
+        }
+        return cartVOS;
     }
 }

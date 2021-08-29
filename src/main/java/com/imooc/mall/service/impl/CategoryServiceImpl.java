@@ -8,7 +8,7 @@ import com.imooc.mall.model.dao.CategoryMapper;
 import com.imooc.mall.model.pojo.Category;
 import com.imooc.mall.model.request.AddCategoryReq;
 import com.imooc.mall.service.CategoryService;
-import com.imooc.mall.vo.CategoryVO;
+import com.imooc.mall.model.vo.CategoryVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
