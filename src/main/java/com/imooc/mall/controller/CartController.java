@@ -5,7 +5,6 @@ import com.imooc.mall.filter.UserFilter;
 import com.imooc.mall.model.vo.CartVO;
 import com.imooc.mall.service.CartService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -47,6 +46,22 @@ public class CartController {
     public ApiRestResponse delete(@RequestParam Integer productId) {
         //不能传入userID，cartID，否则可以删除别人的购物车
         List<CartVO> CartVOList = cartService.delete(UserFilter.currentUser.getId(), productId);
+        return ApiRestResponse.success(CartVOList);
+    }
+
+    @PostMapping("/select")
+    @ApiOperation("选择/不选择购物车的某商品")
+    public ApiRestResponse select(@RequestParam Integer productId, @RequestParam Integer selected) {
+        //不能传入userID，cartID，否则可以删除别人的购物车
+        List<CartVO> CartVOList = cartService.selectOrNot(UserFilter.currentUser.getId(), productId, selected);
+        return ApiRestResponse.success(CartVOList);
+    }
+
+    @PostMapping("/selectAll")
+    @ApiOperation("全选择/全不选择购物车的某商品")
+    public ApiRestResponse selectAll(@RequestParam Integer selected) {
+        //不能传入userID，cartID，否则可以删除别人的购物车
+        List<CartVO> CartVOList = cartService.selectAllOrNot(UserFilter.currentUser.getId(), selected);
         return ApiRestResponse.success(CartVOList);
     }
 }
