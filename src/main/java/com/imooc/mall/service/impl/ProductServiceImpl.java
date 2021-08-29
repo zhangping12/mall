@@ -2,7 +2,7 @@ package com.imooc.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.imooc.mall.common.Constant.ProductListOrderBy;
+import com.imooc.mall.common.Constant;
 import com.imooc.mall.execption.ImoocMallException;
 import com.imooc.mall.execption.ImoocMallExceptionEnum;
 import com.imooc.mall.model.dao.ProductMapper;
@@ -114,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
 
         //排序处理
         String orderBy = productListReq.getOrderBy();
-        if (ProductListOrderBy.PRICE_ORDER_ENUM.contains(orderBy)) {
+        if (Constant.ProductListOrderBy.PRICE_ORDER_ENUM.contains(orderBy)) {
             PageHelper
                     .startPage(productListReq.getPageNum(), productListReq.getPageSize(), orderBy);
         } else {

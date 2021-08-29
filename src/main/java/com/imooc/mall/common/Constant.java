@@ -26,7 +26,7 @@ public class Constant {
      */
     public static String FILE_UPLOAD_DIR;
 
-    @Value("${file.upload.dir}")//需要去application.properties去配置
+    @Value("${file.upload.dir}")//需要去lication.properties去配置
     public void setFileUploadDir(String fileUploadDir) {
         FILE_UPLOAD_DIR = fileUploadDir;
     }
@@ -36,5 +36,21 @@ public class Constant {
      */
     public interface ProductListOrderBy {
         Set<String> PRICE_ORDER_ENUM = Sets.newHashSet("price desc", "price asc");
+    }
+
+    /**
+     * 商品上下架状态
+     */
+    public interface SaleStatus {
+        int NOT_SALE = 0;//商品下架状态
+        int SALE = 1;//商品上架状态
+    }
+
+    /**
+     * 购物车状态
+     */
+    public interface Cart {
+        int UN_CHECKED = 0;//购物车未选中状态
+        int CHECKED = 1;//购物车选中状态
     }
 }
