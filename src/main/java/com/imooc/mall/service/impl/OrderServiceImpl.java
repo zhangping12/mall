@@ -5,6 +5,8 @@ import com.imooc.mall.execption.ImoocMallException;
 import com.imooc.mall.execption.ImoocMallExceptionEnum;
 import com.imooc.mall.filter.UserFilter;
 import com.imooc.mall.model.dao.CartMapper;
+import com.imooc.mall.model.dao.OrderItemMapper;
+import com.imooc.mall.model.dao.OrderMapper;
 import com.imooc.mall.model.dao.ProductMapper;
 import com.imooc.mall.model.pojo.Order;
 import com.imooc.mall.model.pojo.OrderItem;
@@ -37,6 +39,13 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private CartMapper cartMapper;
 
+    @Resource
+    private OrderMapper orderMapper;
+
+    @Resource
+    private OrderItemMapper orderItemMapper;
+
+    @Override
     public String create(CreateOrderReq createOrderReq) {
         //拿到用户ID
         Integer userId = UserFilter.currentUser.getId();
@@ -49,8 +58,8 @@ public class OrderServiceImpl implements OrderService {
             if (cartVO.getSelected().equals(Constant.Cart.CHECKED)) {
                 cartVOListTemp.add(cartVO);
             }
-            cartVOList = cartVOListTemp;
         }
+        cartVOList = cartVOListTemp;
         //如果购物车已勾选的为空，报错
         if (CollectionUtils.isEmpty(cartVOList)) {
             throw new ImoocMallException(ImoocMallExceptionEnum.CART_EMPTY);
@@ -77,13 +86,36 @@ public class OrderServiceImpl implements OrderService {
 
         //生成订单
         Order order = new Order();
+        //生成订单号，有独立的规则
         String orderNo = OrderCodeFactory.getOrderCode(Long.valueOf(userId));
         order.setOrderNo(orderNo);
-
-        //生成订单号，有独立的规则
-
+        order.setUserId(userId);
+        order.setTotalPrice(totalPrice(orderItemList));
+        order.setReceiverName(createOrderReq.getReceiverName());
+        order.setReceiverMobile(createOrderReq.getReceiverMobile());
+        order.setReceiverAddress(createOrderReq.getReceiverAddress());
+        order.setOrderStatus(Constant.OrderStatusEnum.NOT_PAID.getCode());
+        order.setPostage(0);
+        order.setPaymentType(1);
+        //插入到order表
+        orderMapper.insertSelective(order);
         //循环保存每个商品到order_item表
+        for (int i = 0; i < orderItemList.size(); i++) {
+            OrderItem orderItem = orderItemList.get(i);
+            orderItem.setOrderNo(order.getOrderNo());
+            orderItemMapper.insertSelective(orderItem);
+        }
         //把结果返回
+        return orderNo;
+    }
+
+    private Integer totalPrice(List<OrderItem> orderItemList) {
+        Integer totalPrice = 0;
+        for (int i = 0; i < orderItemList.size(); i++) {
+            OrderItem orderItem = orderItemList.get(i);
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
     }
 
     private void cleanCart(List<CartVO> cartVOList) {
@@ -113,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
     private void validSaleStatusAndStock(List<CartVO> cartVOList) {
         for (int i = 0; i < cartVOList.size(); i++) {
             CartVO cartVO = cartVOList.get(i);
-            Product product = productMapper.selectByPrimaryKey(cartVO.getId());
+            Product product = productMapper.selectByPrimaryKey(cartVO.getProductId());
             //判断商品是否存在，商品是否上架
             if (product == null || product.getStatus().equals(Constant.SaleStatus.NOT_SALE)) {
                 throw new ImoocMallException(ImoocMallExceptionEnum.NOT_SALE);

@@ -5,27 +5,17 @@ import javax.validation.constraints.NotNull;
 public class CreateOrderReq {
 
     @NotNull
-    private Integer totalPrice;
-
-    @NotNull
     private String receiverName;
 
     @NotNull
     private String receiverMobile;
 
+    @NotNull
     private String receiverAddress;
 
     private Integer postage = 0;
 
     private Integer paymentType = 1;
-
-    public Integer getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Integer totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 
     public String getReceiverName() {
         return receiverName;
@@ -65,5 +55,16 @@ public class CreateOrderReq {
 
     public void setPaymentType(Integer paymentType) {
         this.paymentType = paymentType;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateOrderReq{" +
+                "receiverName='" + receiverName + '\'' +
+                ", receiverMobile='" + receiverMobile + '\'' +
+                ", receiverAddress='" + receiverAddress + '\'' +
+                ", postage=" + postage +
+                ", paymentType=" + paymentType +
+                '}';
     }
 }

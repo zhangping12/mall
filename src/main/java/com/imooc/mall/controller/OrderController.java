@@ -1,5 +1,6 @@
 package com.imooc.mall.controller;
 
+import com.imooc.mall.common.ApiRestResponse;
 import com.imooc.mall.model.request.CreateOrderReq;
 import com.imooc.mall.service.OrderService;
 import io.swagger.annotations.ApiOperation;
@@ -18,8 +19,10 @@ public class OrderController {
     @Resource
     OrderService orderService;
 
+    @ApiOperation("创建订单")
     @PostMapping("/order/create")
-    public ApiOperation create(@Valid @RequestBody CreateOrderReq createOrderReq) {
-        return null;
+    public ApiRestResponse create(@Valid @RequestBody CreateOrderReq createOrderReq) {
+        String orderNo = orderService.create(createOrderReq);
+        return ApiRestResponse.success(orderNo);
     }
 }
