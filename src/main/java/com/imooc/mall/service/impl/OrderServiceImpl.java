@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemMapper orderItemMapper;
 
     //数据库事务
-    @Transactional(rollbackFor = Exception.class)//遇到任何异常，回滚事务
+    @Transactional(rollbackFor = Exception.class)//遇到任何异常，都会回滚事务
     @Override
     public String create(CreateOrderReq createOrderReq) {
         //拿到用户ID
