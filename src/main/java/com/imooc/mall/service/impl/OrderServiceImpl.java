@@ -17,6 +17,7 @@ import com.imooc.mall.service.CartService;
 import com.imooc.mall.service.OrderService;
 import com.imooc.mall.util.OrderCodeFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -45,6 +46,8 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private OrderItemMapper orderItemMapper;
 
+    //数据库事务
+    @Transactional(rollbackFor = Exception.class)//遇到任何异常，回滚事务
     @Override
     public String create(CreateOrderReq createOrderReq) {
         //拿到用户ID
