@@ -4,10 +4,16 @@ import com.imooc.mall.common.Constant;
 import com.imooc.mall.execption.ImoocMallException;
 import com.imooc.mall.execption.ImoocMallExceptionEnum;
 import com.imooc.mall.filter.UserFilter;
+import com.imooc.mall.model.dao.CartMapper;
+import com.imooc.mall.model.dao.ProductMapper;
+import com.imooc.mall.model.pojo.Order;
+import com.imooc.mall.model.pojo.OrderItem;
+import com.imooc.mall.model.pojo.Product;
 import com.imooc.mall.model.request.CreateOrderReq;
 import com.imooc.mall.model.vo.CartVO;
 import com.imooc.mall.service.CartService;
 import com.imooc.mall.service.OrderService;
+import com.imooc.mall.util.OrderCodeFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,6 +30,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private CartService cartService;
+
+    @Resource
+    private ProductMapper productMapper;
+
+    @Resource
+    private CartMapper cartMapper;
 
     public String create(CreateOrderReq createOrderReq) {
         //拿到用户ID
@@ -45,17 +57,72 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //判断商品是否存在、上下架状态、库存
+        validSaleStatusAndStock(cartVOList);
         //把购物车对象转为订单item对象
-
+        List<OrderItem> orderItemList = cartVOListToOrderItemList(cartVOList);
         //扣库存
+        for (int i = 0; i < orderItemList.size(); i++) {
+            OrderItem orderItem = orderItemList.get(i);
+            Product product = productMapper.selectByPrimaryKey(orderItem.getProductId());
+            int stock = product.getStock() - orderItem.getQuantity();
+            if (stock < 0) {
+                throw new ImoocMallException(ImoocMallExceptionEnum.NOT_ENOUGH);
+            }
+            product.setStock(stock);
+            productMapper.updateByPrimaryKeySelective(product);
+        }
 
         //把购物车中已勾选商品删除
+        cleanCart(cartVOList);
 
         //生成订单
+        Order order = new Order();
+        String orderNo = OrderCodeFactory.getOrderCode(Long.valueOf(userId));
+        order.setOrderNo(orderNo);
 
         //生成订单号，有独立的规则
 
         //循环保存每个商品到order_item表
         //把结果返回
+    }
+
+    private void cleanCart(List<CartVO> cartVOList) {
+        for (int i = 0; i < cartVOList.size(); i++) {
+            CartVO cartVO = cartVOList.get(i);
+            cartMapper.deleteByPrimaryKey(cartVO.getId());
+        }
+    }
+
+    private List<OrderItem> cartVOListToOrderItemList(List<CartVO> cartVOList) {
+        List<OrderItem> orderItemList = new ArrayList<>();
+        for (int i = 0; i < cartVOList.size(); i++) {
+            CartVO cartVO = cartVOList.get(i);
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProductId(cartVO.getProductId());
+            //记录商品快照信息
+            orderItem.setProductName(cartVO.getProductName());
+            orderItem.setProductImg(cartVO.getProductImage());
+            orderItem.setUnitPrice(cartVO.getPrice());
+            orderItem.setQuantity(cartVO.getQuantity());
+            orderItem.setTotalPrice(cartVO.getTotalPrice());
+            orderItemList.add(orderItem);
+        }
+        return orderItemList;
+    }
+
+    private void validSaleStatusAndStock(List<CartVO> cartVOList) {
+        for (int i = 0; i < cartVOList.size(); i++) {
+            CartVO cartVO = cartVOList.get(i);
+            Product product = productMapper.selectByPrimaryKey(cartVO.getId());
+            //判断商品是否存在，商品是否上架
+            if (product == null || product.getStatus().equals(Constant.SaleStatus.NOT_SALE)) {
+                throw new ImoocMallException(ImoocMallExceptionEnum.NOT_SALE);
+            }
+            //判断商品库存
+            if (cartVO.getQuantity() > product.getStock()) {
+                throw new ImoocMallException(ImoocMallExceptionEnum.NOT_ENOUGH);
+            }
+        }
+
     }
 }
