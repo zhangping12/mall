@@ -22,4 +22,8 @@ public interface OrderService {
     PageInfo listForAdmin(Integer pageNum, Integer pageSize);
 
     void pay(String orderNo);
+
+    void deliver(String orderNo);
+
+    void finish(String orderNo);
 }
