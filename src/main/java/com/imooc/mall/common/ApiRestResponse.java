@@ -8,14 +8,14 @@ import com.imooc.mall.execption.ImoocMallExceptionEnum;
 public class ApiRestResponse<T> {
     private Integer status;
     private String msg;
-    private T date;
+    private T data;
     private static final int OK_CODE = 10000;
     private static final String OK_MSG = "SUCCESS";
 
-    public ApiRestResponse(Integer status, String msg, T date) {
+    public ApiRestResponse(Integer status, String msg, T data) {
         this.status = status;
         this.msg = msg;
-        this.date = date;
+        this.data = data;
     }
 
     public ApiRestResponse(Integer status, String msg) {
@@ -33,7 +33,7 @@ public class ApiRestResponse<T> {
 
     public static <T> ApiRestResponse<T> success(T result){
         ApiRestResponse<T> response = new ApiRestResponse<>();
-        response.setDate(result);
+        response.setData(result);
         return response;
     }
 
@@ -50,7 +50,7 @@ public class ApiRestResponse<T> {
         return "ApiRestResponse{" +
                 "status=" + status +
                 ", msg='" + msg + '\'' +
-                ", date=" + date +
+                ", data=" + data +
                 '}';
     }
 
@@ -70,12 +70,12 @@ public class ApiRestResponse<T> {
         this.msg = msg;
     }
 
-    public T getDate() {
-        return date;
+    public T getData() {
+        return data;
     }
 
-    public void setDate(T date) {
-        this.date = date;
+    public void setData(T data) {
+        this.data = data;
     }
 
     public static int getOkCode() {
