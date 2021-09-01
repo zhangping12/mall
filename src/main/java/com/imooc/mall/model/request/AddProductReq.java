@@ -101,4 +101,19 @@ public class AddProductReq {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "AddProductReq{" +
+                "name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", detail='" + detail + '\'' +
+                ", categoryId=" + categoryId +
+                ", price=" + price +
+                ", stock=" + stock +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }
