@@ -51,7 +51,7 @@ public class OrderController {
      * 生成支付二维码
      */
     @ApiOperation("生成支付二维码")
-    @PostMapping("/order/qrcode")
+    @GetMapping("/order/qrcode")
     public ApiRestResponse qrcode(@RequestParam String orderNo) {
         String pngAddress = orderService.qrcode(orderNo);
         return ApiRestResponse.success(pngAddress);
@@ -61,7 +61,7 @@ public class OrderController {
      * 支付接口
      */
     @ApiOperation("支付接口")
-    @PostMapping("/pay")
+    @GetMapping("/pay")
     public ApiRestResponse pay(@RequestParam String orderNo) {
         orderService.pay(orderNo);
         return ApiRestResponse.success();
