@@ -26,12 +26,13 @@ public class UserController {
 
     @GetMapping("/test")
     @ResponseBody
-    public User personalPage(){
+    public User personalPage() {
         return userService.getUser();
     }
 
     /**
      * 注册新用户
+     *
      * @param userName
      * @param password
      * @return
@@ -40,21 +41,22 @@ public class UserController {
     @PostMapping("/register")
     @ResponseBody
     public ApiRestResponse register(@RequestParam("userName") String userName, @RequestParam("password") String password) throws ImoocMallException {
-        if(StringUtils.isEmpty(userName)){
+        if (StringUtils.isEmpty(userName)) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_USER_NAME);
         }
-        if(StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(password)) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_PASSWORD);
         }
-        if(password.length()<8){
+        if (password.length() < 8) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.PASSWORD_TOO_SHORT);
         }
-        userService.register(userName,password);
+        userService.register(userName, password);
         return ApiRestResponse.success();
     }
 
     /**
      * 登录
+     *
      * @param userName
      * @param password
      * @param session
@@ -64,21 +66,22 @@ public class UserController {
     @GetMapping("/login")
     @ResponseBody
     public ApiRestResponse login(@RequestParam("userName") String userName, @RequestParam("password") String password, HttpSession session) throws ImoocMallException {
-        if(StringUtils.isEmpty(userName)){
+        if (StringUtils.isEmpty(userName)) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_USER_NAME);
         }
-        if(StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(password)) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_PASSWORD);
         }
-        User user = userService.login(userName,password);
+        User user = userService.login(userName, password);
         //保存用户信息时，不保存密码
         user.setPassword(null);//不返回密码，防止密码被破解
-        session.setAttribute(Constant.IMOOC_MALL_USER,user);
+        session.setAttribute(Constant.IMOOC_MALL_USER, user);
         return ApiRestResponse.success(user);
     }
 
     /**
      * 更新个性签名
+     *
      * @param session
      * @param signature
      * @return
@@ -86,9 +89,9 @@ public class UserController {
      */
     @PostMapping("/user/update")
     @ResponseBody
-    public ApiRestResponse updateUserInfo(HttpSession session,@RequestParam String signature) throws ImoocMallException {
-        User currentUser = (User)session.getAttribute(Constant.IMOOC_MALL_USER);
-        if(currentUser == null){
+    public ApiRestResponse updateUserInfo(HttpSession session, @RequestParam String signature) throws ImoocMallException {
+        User currentUser = (User) session.getAttribute(Constant.IMOOC_MALL_USER);
+        if (currentUser == null) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_LOGIN);
         }
         User user = new User();
@@ -100,18 +103,20 @@ public class UserController {
 
     /**
      * 退出登录，清除session
+     *
      * @param session
      * @return
      */
     @PostMapping("/user/logout")
     @ResponseBody
-    public ApiRestResponse logout(HttpSession session){
+    public ApiRestResponse logout(HttpSession session) {
         session.removeAttribute(Constant.IMOOC_MALL_USER);
         return ApiRestResponse.success();
     }
 
     /**
      * 管理员登录
+     *
      * @param userName
      * @param password
      * @param session
@@ -121,21 +126,21 @@ public class UserController {
     @GetMapping("/adminLogin")
     @ResponseBody
     public ApiRestResponse adminLogin(@RequestParam("userName") String userName, @RequestParam("password") String password, HttpSession session) throws ImoocMallException {
-        if(StringUtils.isEmpty(userName)){
+        if (StringUtils.isEmpty(userName)) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_USER_NAME);
         }
-        if(StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(password)) {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_PASSWORD);
         }
-        User user = userService.login(userName,password);
+        User user = userService.login(userName, password);
         //校验是否是管理员
         if (userService.checkAdminRole(user)) {
             //是管理员
             //保存用户信息时，不保存密码
             user.setPassword(null);//不返回密码，防止密码被破解
-            session.setAttribute(Constant.IMOOC_MALL_USER,user);
+            session.setAttribute(Constant.IMOOC_MALL_USER, user);
             return ApiRestResponse.success(user);
-        }else{
+        } else {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_ADMIN);
         }
 

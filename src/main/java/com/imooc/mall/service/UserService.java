@@ -12,10 +12,11 @@ public interface UserService {
 
     /**
      * 注册
+     *
      * @param userName
      * @param password
      */
-    void register(String userName,String password) throws ImoocMallException;
+    void register(String userName, String password) throws ImoocMallException;
 
     User login(String userName, String password) throws ImoocMallException;
 

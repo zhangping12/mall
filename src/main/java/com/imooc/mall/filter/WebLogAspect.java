@@ -43,10 +43,10 @@ public class WebLogAspect {
 
     }
 
-    @AfterReturning(returning = "res",pointcut = "webLog()")
+    @AfterReturning(returning = "res", pointcut = "webLog()")
     public void doAfterReturning(Object res) throws JsonProcessingException {
         //处理完请求，返回内容
-        log.info("RESPONSE:"+new ObjectMapper().writeValueAsString(res));//由fastJson中的new ObjectMapper().writeValueAsString把对象转换成json格式的工具
+        log.info("RESPONSE:" + new ObjectMapper().writeValueAsString(res));//由fastJson中的new ObjectMapper().writeValueAsString把对象转换成json格式的工具
 
     }
 }

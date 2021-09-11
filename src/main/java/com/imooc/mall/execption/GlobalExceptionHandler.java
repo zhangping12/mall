@@ -22,18 +22,20 @@ public class GlobalExceptionHandler {
 
     /**
      * 系统异常
+     *
      * @param e
      * @return
      */
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public Object handleException(Exception e){
-        log.error("Default Exception:",e);
+    public Object handleException(Exception e) {
+        log.error("Default Exception:", e);
         return ApiRestResponse.error(ImoocMallExceptionEnum.SYSTEM_ERROR);
     }
 
     /**
      * 业务异常
+     *
      * @param e
      * @return
      */
